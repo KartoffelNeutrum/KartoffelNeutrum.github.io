@@ -152,6 +152,79 @@ function renderBracket(){
   champMatch.appendChild(champSlot);
   champCol.appendChild(champMatch);
   bracketEl.appendChild(champCol);
+  renderChampionSummary();
+}
+
+function renderChampionSummary(){
+  const el = document.getElementById('championSummary');
+  if(!el) return;
+  if(!state || !state.champion){ el.style.display = 'none'; el.innerHTML = ''; return; }
+  el.style.display = 'flex';
+  const step = parseFloat(el.dataset.step || '0.5');
+  // compute eliminations: map team -> roundIndex where they lost
+  const numRounds = state.rounds.length;
+  const eliminated = {}; // team -> roundIndex
+  for(let r=0;r<numRounds;r++){
+    state.rounds[r].forEach((match, mIdx)=>{
+      const a = match[0], b = match[1];
+      const winner = state.winners[`${r}-${mIdx}`];
+      if(winner){
+        const loser = (a === winner) ? b : ((b === winner) ? a : null);
+        if(loser && loser !== 'BYE' && loser !== '-') eliminated[loser] = r;
+      } else {
+        // fallback: if champion equals one player here, mark the other as loser
+        if(state.champion && (a === state.champion || b === state.champion)){
+          const loser = (a === state.champion) ? b : a;
+          if(loser && loser !== 'BYE' && loser !== '-') eliminated[loser] = r;
+        }
+      }
+    });
+  }
+
+  const fmt = v => { const n = Math.round(Number(v)*10)/10; return (n % 1 === 0) ? String(n) : String(n); };
+
+  let html = `
+    <div class="champ-text"><strong>Champion:</strong> ${state.champion}</div>
+    <div class="champ-controls">
+      <label>Basis (Gläser-Stufe): <input id="baseStep" type="number" min="0" step="0.5" value="${fmt(step)}" style="width:70px"></label>
+      <div class="preset-buttons">
+        <button id="presetHalf">0.5</button>
+        <button id="presetOne">1</button>
+        <button id="presetTwo">2</button>
+      </div>
+    </div>
+  `;
+
+  // per-round breakdown
+  html += '<div class="round-breakdown"><ul style="margin:6px 0 0;padding-left:18px;color:var(--muted)">';
+  for(let r=0;r<numRounds;r++){
+    const amount = Math.round((numRounds - r) * step * 10)/10;
+    html += `<li>Verlierer Runde ${r+1}: ${fmt(amount)} ${amount==1? 'Glas' : 'Gläser' } pro Spieler</li>`;
+  }
+  html += '</ul></div>';
+
+  // per-team list
+  const teamsList = Object.keys(eliminated).sort((a,b)=> eliminated[a]-eliminated[b]);
+  if(teamsList.length){
+    html += '<div class="team-list-summary" style="margin-left:12px;"><strong>Teams:</strong><ul style="margin:6px 0 0;padding-left:18px">';
+    teamsList.forEach(t=>{
+      const r = eliminated[t];
+      const amt = Math.round((numRounds - r) * step * 10)/10;
+      html += `<li>${t}: ${fmt(amt)} ${amt==1?'Glas':'Gläser'} (verloren in Runde ${r+1})</li>`;
+    });
+    html += '</ul></div>';
+  } else {
+    html += '<div class="team-list-summary" style="margin-left:12px;color:var(--muted)">Keine ausgeschiedenen Teams gefunden.</div>';
+  }
+
+  el.innerHTML = html;
+
+  const baseInput = el.querySelector('#baseStep');
+  function applyStep(v){ el.dataset.step = String(v); renderChampionSummary(); }
+  baseInput.addEventListener('input', ()=>{ const v = parseFloat(baseInput.value) || 0; applyStep(v); });
+  el.querySelector('#presetHalf').addEventListener('click', ()=>{ baseInput.value = 0.5; applyStep(0.5); });
+  el.querySelector('#presetOne').addEventListener('click', ()=>{ baseInput.value = 1; applyStep(1); });
+  el.querySelector('#presetTwo').addEventListener('click', ()=>{ baseInput.value = 2; applyStep(2); });
 }
 
 startBtn.addEventListener('click', ()=>{ buildBracket(teams); });
