@@ -51,3 +51,10 @@ footer{max-width:900px;margin:20px auto;color:var(--muted)}
 .rules h2{margin:0 0 8px;color:var(--accent);font-size:20px}
 .rules pre{white-space:pre-wrap;font-family:Segoe UI,Inter,system-ui,Arial,sans-serif;font-size:16px;line-height:1.6;color:#e6eef6;background:transparent;border:0;padding:0;margin:0}
 .rules p{color:var(--muted);margin:0}
+
+/* Champion summary */
+.champion-summary{max-width:900px;margin:12px auto;padding:12px;border-radius:8px;background:rgba(15,22,32,0.6);display:flex;gap:12px;align-items:center;justify-content:space-between;border:1px solid rgba(255,255,255,0.03)}
+.champion-summary .champ-text{font-weight:700;color:var(--accent)}
+.champion-summary .champ-controls label{font-size:14px;color:#e6eef6}
+.champion-summary .preset-buttons button{margin-left:6px;padding:6px 8px;border-radius:6px;border:0;background:#334155;color:#fff;cursor:pointer}
+.champion-summary .summaryLine{color:var(--muted);font-size:14px;margin-left:12px} 
