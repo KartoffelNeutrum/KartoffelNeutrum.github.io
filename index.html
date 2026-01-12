@@ -9,12 +9,12 @@
 <body>
   <header>
     <h1>Tischkicker Trinkspiel</h1>
-    <p>Gib vier Teamnamen ein und starte das Turnier. Klicke einen Gewinner an, um ihn weiterzuziehen.</p>
+    <p>Gib Teamnamen ein und starte das Turnier. Klicke einen Gewinner an, um ihn weiterzuziehen.</p>
   </header>
 
   <section class="setup">
     <div class="team-creator">
-      <input id="teamNameInput" placeholder="Teamnamen eingeben (z.B. Die Hammer)" />
+      <input id="teamNameInput" placeholder="Teamnamen eingeben (z.B. Downies)" />
       <button id="addTeamBtn">Team hinzufügen</button>
       <button id="clearTeamsBtn">Alle entfernen</button>
     </div>
@@ -32,6 +32,7 @@
 
   <main class="bracket-wrap">
     <div id="bracket" class="bracket"></div>
+    <div id="championSummary" class="champion-summary" style="display:none;"></div>
   </main>
 
   <section class="rules">
