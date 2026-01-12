@@ -1,11 +1,77 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="de">
 <head>
-  <meta charset="utf-8">
-  <title>Meine Seite</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tischkicker Trinkspiel</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Yo das ist meine GitHub Page</h1>
-  <p>läuft</p>
+  <header>
+    <h1>Tischkicker Trinkspiel</h1>
+    <p>Gib vier Teamnamen ein und starte das Turnier. Klicke einen Gewinner an, um ihn weiterzuziehen.</p>
+  </header>
+
+  <section class="setup">
+    <div class="team-creator">
+      <input id="teamNameInput" placeholder="Teamnamen eingeben (z.B. Die Hammer)" />
+      <button id="addTeamBtn">Team hinzufügen</button>
+      <button id="clearTeamsBtn">Alle entfernen</button>
+    </div>
+
+    <div class="team-list-wrap">
+      <p>Aktuelle Teams (mind. 2):</p>
+      <div id="teamList" class="team-list"></div>
+    </div>
+
+    <div class="controls">
+      <button id="startBtn">Turnier starten</button>
+      <button id="resetBtn">Zurücksetzen</button>
+    </div>
+  </section>
+
+  <main class="bracket-wrap">
+    <div id="bracket" class="bracket"></div>
+  </main>
+
+  <section class="rules">
+    <h2>Regeln</h2>
+    <pre>
+Regeln Trink-Tischkicker Turnier
+
+Teams
+Gespielt wird immer in Zweierteams. Jedes Team besteht aus zwei Spielern und spielt gemeinsam an einer Seite. Während eines Spiels dürfen die Positionen nicht gewechselt werden.
+
+Spielmodus
+Gespielt wird klassischer Tischkicker zwei gegen zwei. Ein Spiel geht bis 10 Tore. Wer zuerst 10 Tore erzielt, gewinnt. Bei Gleichstand wird weitergespielt, bis ein Team zwei Tore Vorsprung hat.
+
+Turnierablauf
+Das Turnier wird im K.-o.-System oder mit Gruppenphase gespielt. Das Gewinnerteam kommt weiter, das Verliererteam scheidet aus oder rutscht in die Verliererrunde, je nach Turnieraufbau.
+
+Trinkregeln
+Nach jedem verlorenen Spiel muss jeder Spieler des Verliererteams ein volles Glas trinken.
+Für jedes Gegentor ab dem sechsten Tor muss zusätzlich ein halbes Glas getrunken werden.
+Bei einem 10:0 Sieg muss jeder Spieler des Verliererteams zwei volle Gläser trinken.
+Das Gewinnerteam darf dem Verliererteam die Getränke aussuchen.
+
+Fairplay
+Trullern ist streng verboten.
+Rütteln, Anheben oder absichtliches Ablenken ist ebenfalls verboten.
+Bei Trullern muss der verursachende Spieler sofort ein volles Glas trinken und das Gegentor zählt automatisch.
+Bei Diskussionen oder Rumgeheule muss der Verursacher ein halbes Glas trinken. Die Entscheidung trifft der Schiedsrichter oder die Mehrheit der Zuschauer.
+
+Bonus- und Strafregeln
+Eigentore zählen doppelt für die Trinkmenge des verursachenden Spielers.
+Wenn ein Team drei Gegentore hintereinander kassiert, müssen beide Spieler je ein volles Glas trinken.
+Wenn ein Spieler den Ball absichtlich festhält, trinkt er ein volles Glas und der Ball geht an den Gegner.
+Der Turniersieger darf am Ende eine zusätzliche Trinkregel für das Finale festlegen.
+    </pre>
+  </section>
+
+  <footer>
+    <small>Einfach klicken um Gewinner zu wählen. Turniermodus: beliebige Team-Anzahl (automatisch auf nächste Potenz von 2 aufgefüllt).</small>
+  </footer>
+
+  <script src="app.js"></script>
 </body>
 </html>
