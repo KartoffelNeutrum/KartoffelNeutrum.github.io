@@ -41,9 +41,27 @@ h1{margin:0 0 6px}
 footer{max-width:900px;margin:20px auto;color:var(--muted)}
 
 @media (max-width:700px){
+  /* Stack the top setup area to avoid horizontal scrolling on phones */
+  .setup{flex-direction:column;gap:12px;align-items:stretch;padding:0 6px}
+  .team-creator{display:flex;flex-direction:column;align-items:stretch;gap:8px}
+  .team-creator input{min-width:0;width:100%}
+  .team-creator button{width:100%;padding:10px;border-radius:8px}
+  .team-list-wrap{width:100%}
+  .team-list{justify-content:flex-start}
+  .controls{display:flex;flex-direction:column;gap:8px}
+  .controls button{width:100%}
+
+  /* make bracket items stack nicely */
   .bracket{flex-direction:column;gap:18px}
   .match{width:100%}
-  .team-inputs{flex-direction:column}
+
+  /* reduce spacing for small screens */
+  body{padding:16px}
+  header h1{font-size:20px;margin-bottom:4px}
+  header p{font-size:14px}
+
+  /* prevent accidental horizontal scroll */
+  html, body{overflow-x:hidden}
 }
 
 /* Regeln: bessere Lesbarkeit */
