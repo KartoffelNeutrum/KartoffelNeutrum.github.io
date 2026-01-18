@@ -40,6 +40,19 @@ h1{margin:0 0 6px}
 
 footer{max-width:900px;margin:20px auto;color:var(--muted)}
 
+/* Domme Button */
+.domme-button-container{max-width:900px;margin:12px auto;display:flex;justify-content:center}
+.domme-button{padding:10px 16px;border-radius:8px;border:0;background:var(--accent);color:#071022;font-weight:700;cursor:pointer;font-size:16px;transition:all 0.2s ease}
+.domme-button:hover{background:#f5d547;transform:scale(1.05)}
+.domme-button:active{transform:scale(0.98)}
+
+/* Domme Modal */
+.domme-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:1000}
+.domme-modal-content{position:relative;max-width:90%;max-height:90%;display:flex;justify-content:center;align-items:center}
+.domme-modal-content img{max-width:100%;max-height:100%;border-radius:8px}
+.domme-close{position:absolute;top:-30px;right:0;font-size:36px;color:#fff;cursor:pointer;font-weight:bold;user-select:none;transition:color 0.2s ease}
+.domme-close:hover{color:var(--accent)}
+
 @media (max-width:700px){
   /* Stack the top setup area to avoid horizontal scrolling on phones */
   .setup{flex-direction:column;gap:12px;align-items:stretch;padding:0 6px}

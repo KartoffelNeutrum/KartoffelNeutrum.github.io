@@ -231,6 +231,15 @@ startBtn.addEventListener('click', ()=>{ buildBracket(teams); });
 
 resetBtn.addEventListener('click', ()=>{ teams = []; state = null; renderTeamList(); renderBracket(); });
 
+// Domme Button Event Listener
+const dommeBtn = document.getElementById('dommeBtn');
+const dommeModal = document.getElementById('dommeModal');
+const dommeClose = document.querySelector('.domme-close');
+
+dommeBtn.addEventListener('click', ()=>{ dommeModal.style.display = 'flex'; });
+dommeClose.addEventListener('click', ()=>{ dommeModal.style.display = 'none'; });
+dommeModal.addEventListener('click', (e)=>{ if(e.target === dommeModal) dommeModal.style.display = 'none'; });
+
 // start with empty team list (no example teams)
 renderTeamList();
 renderBracket();
