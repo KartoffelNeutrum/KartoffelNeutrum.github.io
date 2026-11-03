@@ -17,3 +17,14 @@ Die App liegt in `/vintage-reselling/` und ist danach unter
 
 ## Sicherheit
 Nur den Supabase Publishable/anon Key in der Website verwenden. Niemals den Secret Key oder Service-Role-Key veröffentlichen. Zugriff auf Lager und Verkäufe ist durch Row Level Security auf angemeldete Benutzer beschränkt. Bilder sind öffentlich abrufbar, daher keine privaten Bilder hochladen.
+
+## Vinted (privates Konto)
+Die App bietet keine direkte Vinted-Kontoanbindung. Hinterlege bei einem Artikel die öffentliche URL deines Angebots; der Link erscheint im Tab „Vinted-Angebote“. Beim Erfassen eines Verkaufs kannst du „Vinted“ als Verkaufskanal auswählen. Verkäufe und Bestände werden dadurch in STOCKROOM aktualisiert, aber nicht automatisch von Vinted importiert.
+
+Bei einer bereits eingerichteten Supabase-Datenbank müssen die neuen Spalten einmalig ergänzt werden (Supabase → SQL Editor):
+
+```sql
+alter table public.products add column if not exists vinted_url text;
+alter table public.sales add column if not exists sale_channel text not null default 'Sonstig';
+notify pgrst, 'reload schema';
+```
