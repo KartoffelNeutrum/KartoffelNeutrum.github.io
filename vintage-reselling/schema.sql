@@ -1,6 +1,6 @@
 create extension if not exists pgcrypto;
-create table if not exists public.products(id uuid primary key default gen_random_uuid(),name text not null,brand text,category text,size text,quantity integer not null default 0 check(quantity>=0),purchase_price numeric(10,2) not null default 0,sale_price numeric(10,2) not null default 0,image_url text,created_at timestamptz not null default now());
-create table if not exists public.sales(id uuid primary key default gen_random_uuid(),product_id uuid references public.products(id) on delete set null,product_name text not null,quantity integer not null check(quantity>0),sale_price numeric(10,2) not null check(sale_price>=0),unit_cost numeric(10,2) not null check(unit_cost>=0),note text,sold_at timestamptz not null default now());
+create table if not exists public.products(id uuid primary key default gen_random_uuid(),name text not null,brand text,category text,size text,quantity integer not null default 0 check(quantity>=0),purchase_price numeric(10,2) not null default 0,sale_price numeric(10,2) not null default 0,image_url text,vinted_url text,created_at timestamptz not null default now());
+create table if not exists public.sales(id uuid primary key default gen_random_uuid(),product_id uuid references public.products(id) on delete set null,product_name text not null,quantity integer not null check(quantity>0),sale_price numeric(10,2) not null check(sale_price>=0),unit_cost numeric(10,2) not null check(unit_cost>=0),note text,sale_channel text not null default 'Sonstig',sold_at timestamptz not null default now());
 alter table public.products enable row level security; alter table public.sales enable row level security;
 drop policy if exists "products_auth_all" on public.products; create policy "products_auth_all" on public.products for all to authenticated using(true) with check(true);
 drop policy if exists "sales_auth_all" on public.sales; create policy "sales_auth_all" on public.sales for all to authenticated using(true) with check(true);
@@ -10,3 +10,6 @@ drop policy if exists "product_images_public_read" on storage.objects; create po
 alter table public.products replica identity full; alter table public.sales replica identity full;
 do $$ begin alter publication supabase_realtime add table public.products; exception when duplicate_object then null; when others then if sqlstate <> '42710' then raise; end if; end $$;
 do $$ begin alter publication supabase_realtime add table public.sales; exception when duplicate_object then null; when others then if sqlstate <> '42710' then raise; end if; end $$;
+-- Erweiterung für Vinted-Links und manuelle Verkaufskanäle (auch für bestehende Installationen)
+alter table public.products add column if not exists vinted_url text;
+alter table public.sales add column if not exists sale_channel text not null default 'Sonstig';
