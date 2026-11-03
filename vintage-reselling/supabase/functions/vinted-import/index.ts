@@ -101,14 +101,22 @@ Deno.serve(async (req) => {
 
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+    let publishableKey = Deno.env.get("SUPABASE_ANON_KEY") || Deno.env.get("SUPABASE_PUBLISHABLE_KEY");
+    if (!publishableKey) {
+      try {
+        const namedKeys = JSON.parse(Deno.env.get("SUPABASE_PUBLISHABLE_KEYS") || "{}");
+        publishableKey = Object.values(namedKeys)[0] as string | undefined;
+      } catch {
+        publishableKey = undefined;
+      }
+    }
     const ujeebuKey = Deno.env.get("UJEEBU_API_KEY");
-    if (!supabaseUrl || !anonKey) return json({ error: "Supabase function is not configured." }, 500);
+    if (!supabaseUrl || !publishableKey) return json({ error: "Supabase function is not configured." }, 500);
     if (!ujeebuKey) return json({ error: "UJEEBU_API_KEY fehlt. Bitte als Supabase Function Secret hinterlegen." }, 503);
 
     const authorization = req.headers.get("Authorization");
     if (!authorization) return json({ error: "Anmeldung erforderlich." }, 401);
-    const supabase = createClient(supabaseUrl, anonKey, {
+    const supabase = createClient(supabaseUrl, publishableKey, {
       global: { headers: { Authorization: authorization } },
     });
     const { data: authData, error: authError } = await supabase.auth.getUser();
