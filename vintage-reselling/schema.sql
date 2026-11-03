@@ -12,4 +12,6 @@ do $$ begin alter publication supabase_realtime add table public.products; excep
 do $$ begin alter publication supabase_realtime add table public.sales; exception when duplicate_object then null; when others then if sqlstate <> '42710' then raise; end if; end $$;
 -- Erweiterung für Vinted-Links und manuelle Verkaufskanäle (auch für bestehende Installationen)
 alter table public.products add column if not exists vinted_url text;
+alter table public.products add column if not exists description text;
+alter table public.products add column if not exists image_urls jsonb not null default '[]'::jsonb;
 alter table public.sales add column if not exists sale_channel text not null default 'Sonstig';
