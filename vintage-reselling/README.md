@@ -18,13 +18,27 @@ Die App liegt in `/vintage-reselling/` und ist danach unter
 ## Sicherheit
 Nur den Supabase Publishable/anon Key in der Website verwenden. Niemals den Secret Key oder Service-Role-Key veröffentlichen. Zugriff auf Lager und Verkäufe ist durch Row Level Security auf angemeldete Benutzer beschränkt. Bilder sind öffentlich abrufbar, daher keine privaten Bilder hochladen.
 
-## Vinted (privates Konto)
-Die App bietet keine direkte Vinted-Kontoanbindung. Hinterlege bei einem Artikel die öffentliche URL deines Angebots; der Link erscheint im Tab „Vinted-Angebote“. Beim Erfassen eines Verkaufs kannst du „Vinted“ als Verkaufskanal auswählen. Verkäufe und Bestände werden dadurch in STOCKROOM aktualisiert, aber nicht automatisch von Vinted importiert.
+## Öffentlicher Vinted-Import
+STOCKROOM liest ausschließlich öffentliche Angebotsseiten von `vinted.de`. Es werden keine Vinted-Logins, Cookies oder privaten Kontodaten verwendet. Der Import nutzt Ujeebu als externen Abrufdienst; die Angebots-URL wird an diesen Dienst übermittelt. Der Anbieter benötigt einen API-Key und berechnet Credits pro erfolgreichem Abruf (JavaScript-Rendering: laut Dokumentation 5 Credits pro Anfrage). Prüfe vor der Nutzung die aktuellen Tarife und nutze keine kostenpflichtige Aufladung ohne Zustimmung eines Erziehungsberechtigten.
 
-Bei einer bereits eingerichteten Supabase-Datenbank müssen die neuen Spalten einmalig ergänzt werden (Supabase → SQL Editor):
+### Einmalige Einrichtung
+1. Einen Ujeebu-API-Key über das eigene Konto erstellen. Den Key niemals in GitHub, in den Website-Code oder in einen Chat kopieren.
+2. In Supabase unter **Edge Functions** eine Funktion mit dem Namen `vinted-import` anlegen.
+3. Den Inhalt von `supabase/functions/vinted-import/index.ts` in die Funktion übernehmen und deployen.
+4. In Supabase unter **Edge Functions → Secrets** den Secret-Namen `UJEEBU_API_KEY` mit dem API-Key anlegen.
+5. Die Funktion muss JWT-Prüfung aktiviert haben. Sie akzeptiert nur angemeldete STOCKROOM-Benutzer und öffentliche Vinted-Links von `vinted.de`.
+
+Der Import versucht Titel, Marke, Kategorie, Größe, Preis, Beschreibung und mehrere Produktbilder zu erkennen. Vinted kann einzelne Felder auf öffentlichen Seiten auslassen; fehlende Angaben werden angezeigt und können manuell ergänzt werden. Es wird keine CAPTCHA-Lösung oder Anmeldung verwendet.
+
+### Datenbank aktualisieren
+Bei einer bereits eingerichteten Supabase-Datenbank einmalig im **SQL Editor** ausführen:
 
 ```sql
 alter table public.products add column if not exists vinted_url text;
+alter table public.products add column if not exists description text;
+alter table public.products add column if not exists image_urls jsonb not null default '[]'::jsonb;
 alter table public.sales add column if not exists sale_channel text not null default 'Sonstig';
 notify pgrst, 'reload schema';
 ```
+
+Neue Datenbankprojekte erhalten diese Spalten bereits durch `schema.sql`.
